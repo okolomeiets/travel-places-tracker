@@ -2,10 +2,8 @@
 
 Travel Places Tracker is a small Angular application for searching travel places by keyword and location, viewing place details, and saving favorite places to a wishlist.
 
-The main focus of the project is on Angular fundamentals, clean project structure, Reactive Forms, TypeScript models, API integration, Angular signals, localStorage, simple caching, and user-friendly UI states.
-
 > Note: This project requires a Geoapify API key for local usage.
-> The API key is not included in the repository for security reasons.
+> The repository contains only a placeholder API key value.
 > Please follow the **Environment Setup** section before running the app.
 
 ## Test Task Description
@@ -13,7 +11,9 @@ The main focus of the project is on Angular fundamentals, clean project structur
 ### Travel Places Tracker
 
 Create a web application where users can build a list of places they would like to visit based on search results by keyword and location.
+
 The application should use any public API, for example Foursquare Places API, to fetch information about popular tourist places.
+
 Users should be able to:
 
 - search for places by keyword and location
@@ -24,8 +24,6 @@ Users should be able to:
 The application should also implement simple caching to avoid repeated API requests for the same search within 10 minutes.
 
 ## Preview
-
-The application was tested locally with a valid Geoapify API key.
 
 ### Search Results
 
@@ -48,8 +46,8 @@ The application was tested locally with a valid Geoapify API key.
 - View a static map preview on the details page
 - Add and remove places from wishlist
 - Persist wishlist in localStorage
-- Cache search results for 10 minutes
-- Handle loading and error states
+- Cache search results in memory for 10 minutes
+- Handle loading, error, and empty states
 - Display fallback values when API data is missing
 - Responsive layout for desktop and mobile screens
 
@@ -80,13 +78,11 @@ Geoapify is used for:
 
 The project is implemented as a frontend-only demo application.
 
-## Implementation Note
-
-Some data mentioned in the task, such as ratings, real photos, tips, and reviews, may not be available in the public Geoapify response. The application handles missing data gracefully and displays fallback values instead of showing incomplete or broken UI.
-
-The search cache is based on both keyword and location. This prevents incorrect cached results when users search for different types of places in the same city, for example museums and cafes.
-
 ## API Limitations
+
+The original task allowed using any public places API, with Foursquare Places API mentioned as an example.
+
+For this project, Geoapify API was used because it works reliably in a frontend-only Angular application without requiring a backend proxy.
 
 Geoapify provides useful place information such as:
 
@@ -100,23 +96,32 @@ Geoapify provides useful place information such as:
 - opening hours when available
 - additional details when available
 
-However, Geoapify does not provide ratings, reviews, real photos, tips, or rich tourist content for every place.
+However, Geoapify does not consistently provide ratings, reviews, real photos, tips, or rich tourist content for every place.
 
 Because of that, the application does not fake unavailable data. Instead, it shows available information and handles missing fields with clear fallback UI.
 
 For a production application, API requests should usually be handled through a backend or proxy layer, especially when working with private API keys or stricter API providers.
 
+## Technical Notes
+
+- The search form is built with Angular Reactive Forms.
+- API communication is handled in a dedicated service using Angular HttpClient Observables.
+- Angular Signals are used for local UI state such as loading, errors, places, and place details.
+- Search results are cached in memory for 10 minutes.
+- The cache key is based on both keyword and location, so different searches in the same city do not reuse incorrect results.
+- Wishlist items are stored in localStorage and remain available after page reload.
+- The details page displays additional place information and a static map preview when coordinates are available.
+- Missing API data is handled with fallback UI.
+
 ## Environment Setup
 
 This project uses the Geoapify API to search for places.
 
-The API key is not included in the repository for security reasons.
-
-To run the project locally, please create your own free Geoapify API key and add it to the environment file.
+The repository contains only a placeholder API key value. To run the project locally, please create your own free Geoapify API key and add it to the environment file.
 
 ### How to get a Geoapify API key
 
-1. Go to Geoapify [https://www.geoapify.com/](https://www.geoapify.com/)
+1. Go to [Geoapify](https://www.geoapify.com/).
 2. Create a free account or log in.
 3. Open the API keys section in your Geoapify dashboard.
 4. Create or copy an API key.
@@ -124,13 +129,13 @@ To run the project locally, please create your own free Geoapify API key and add
 
 ### Edit environment file
 
-Edit a file:
+Open this file:
 
 ```txt
 src/environments/environment.ts
 ```
 
-Replace `YOUR_GEOAPIFY_API_KEY` with your real Geoapify API key.
+Replace `YOUR_GEOAPIFY_API_KEY` with your real Geoapify API key:
 
 ```ts
 export const environment = {
@@ -138,16 +143,6 @@ export const environment = {
   apiKey: 'YOUR_GEOAPIFY_API_KEY',
 };
 ```
-
-## API Key Notice
-
-This is a frontend-only demo application.
-
-The API key is intentionally not committed to the repository.
-
-Frontend API keys cannot be fully hidden in browser applications, so a production version should move API requests to a backend or proxy layer.
-
-For local development, please use your own Geoapify API key.
 
 ## Getting Started
 
@@ -166,13 +161,10 @@ npm install
 
 ### 3. Add Geoapify API key
 
-Go to `src/environments/environment.ts` and add your Geoapify API key:
+Follow the **Environment Setup** section and add your Geoapify API key to:
 
-```ts
-export const environment = {
-  production: false,
-  apiKey: 'YOUR_GEOAPIFY_API_KEY',
-};
+```txt
+src/environments/environment.ts
 ```
 
 ### 4. Run the project

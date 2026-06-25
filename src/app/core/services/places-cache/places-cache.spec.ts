@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { GeoapifyPlacesResponse } from '../../models/geoapify-place.model';
@@ -28,11 +27,7 @@ describe('PlacesCache', () => {
   let service: PlacesCache;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-
-    service = TestBed.inject(PlacesCache);
-    localStorage.clear();
-
+    service = new PlacesCache();
     vi.useRealTimers();
   });
 
@@ -58,19 +53,19 @@ describe('PlacesCache', () => {
     expect(cachedPlaces).toBeNull();
   });
 
-  it('should return null and remove cache when cached data is older than 10 minutes', () => {
+  it('should return null when cached data is older than 10 minutes', () => {
     vi.useFakeTimers();
 
-    const startTime = new Date('2026-06-25T10:00:00Z');
-    vi.setSystemTime(startTime);
+    vi.setSystemTime(new Date('2026-06-25T10:00:00Z'));
 
     service.savePlaces('museum', 'wroclaw', mockPlacesResponse);
 
-    const elevenMinutesLater = new Date('2026-06-25T10:11:00Z');
-    vi.setSystemTime(elevenMinutesLater);
+    vi.setSystemTime(new Date('2026-06-25T10:11:00Z'));
 
     const cachedPlaces = service.getCachedPlaces('museum', 'wroclaw');
 
     expect(cachedPlaces).toBeNull();
+
+    vi.useRealTimers();
   });
 });
