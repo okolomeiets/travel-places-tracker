@@ -122,9 +122,9 @@ To run the project locally, please create your own free Geoapify API key and add
 4. Create or copy an API key.
 5. Add it to the Angular environment file.
 
-### Create environment file
+### Edit environment file
 
-Edite a file:
+Edit a file:
 
 ```txt
 src/environments/environment.ts
