@@ -1,0 +1,129 @@
+.places-page {
+  min-height: 100vh;
+  padding: 48px 24px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 184, 108, 0.22), transparent 32%),
+    linear-gradient(135deg, #f7f3ed 0%, #efe7dc 100%);
+  color: #2f261f;
+}
+
+.places-page__hero {
+  max-width: 900px;
+  margin: 0 auto 32px;
+  text-align: center;
+}
+
+.places-page__eyebrow {
+  margin: 0 0 12px;
+  color: #b86b2f;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.places-page__title {
+  margin: 0;
+  color: #241a14;
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.places-page__description {
+  max-width: 640px;
+  margin: 20px auto 0;
+  color: #6f6258;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.places-page__results {
+  width: 100%;
+  max-width: 1120px;
+  margin: 32px auto 0;
+}
+
+.places-page__status,
+.places-page__error {
+  margin: 24px auto 0;
+  padding: 16px 18px;
+  border-radius: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.places-page__status {
+  background: rgba(255, 255, 255, 0.72);
+  color: #6f6258;
+  box-shadow: 0 16px 40px rgba(74, 56, 41, 0.08);
+}
+
+.places-page__error {
+  background: #ffe6e1;
+  color: #9f2d1f;
+  border: 1px solid rgba(159, 45, 31, 0.18);
+}
+
+.places-page__results-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.places-page__results-title {
+  margin: 0;
+  color: #241a14;
+  font-size: 1.7rem;
+  letter-spacing: -0.03em;
+}
+
+.places-page__results-count {
+  margin: 0;
+  color: #7d7065;
+  font-size: 0.95rem;
+}
+
+.places-page__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+@media (max-width: 980px) {
+  .places-page__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .places-page {
+    padding: 32px 16px;
+  }
+
+  .places-page__results-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .places-page__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.places-page__wishlist {
+  width: 100%;
+  max-width: 1120px;
+  margin: 32px auto 0;
+}
+.places-page__loader {
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+  margin-top: 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 16px 40px rgba(74, 56, 41, 0.08);
+}

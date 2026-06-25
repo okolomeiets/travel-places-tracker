@@ -1,0 +1,50 @@
+<article class="place-card">
+  <div class="place-card__content">
+    <p class="place-card__category">
+      {{ place().properties.categories?.[0] || 'Place' }}
+    </p>
+
+    <h3 class="place-card__title">
+      {{ place().properties.name || place().properties.address_line1 || 'Unnamed place' }}
+    </h3>
+
+    <p class="place-card__address">
+      {{ place().properties.formatted || 'Address is not available' }}
+    </p>
+
+    <div class="place-card__meta">
+      @if (place().properties.city) {
+        <span>{{ place().properties.city }}</span>
+      }
+
+      @if (place().properties.country) {
+        <span>{{ place().properties.country }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="place-card__footer">
+    <div class="place-card__actions">
+      @if (getPlaceId()) {
+        <a class="place-card__details-link" [routerLink]="['/places', getPlaceId()]">
+          View details
+        </a>
+      }
+
+      <button
+        class="place-card__button"
+        type="button"
+        [disabled]="!isWishlistCard() && isSaved()"
+        (click)="onButtonClick()"
+      >
+        @if (isWishlistCard()) {
+          Remove
+        } @else if (isSaved()) {
+          Saved
+        } @else {
+          Add to wishlist
+        }
+      </button>
+    </div>
+  </div>
+</article>

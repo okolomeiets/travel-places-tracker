@@ -1,0 +1,115 @@
+<main class="place-details-page">
+  <a class="place-details-page__back-link" routerLink="/">← Back to search</a>
+
+  @if (isLoading()) {
+    <p class="place-details-page__status">Loading place details...</p>
+  }
+
+  @if (errorMessage()) {
+    <p class="place-details-page__error">{{ errorMessage() }}</p>
+  }
+
+  @if (place(); as placeDetails) {
+    <article class="place-details">
+      <p class="place-details__eyebrow">Place details</p>
+
+      <h1 class="place-details__title">
+        {{ getPlaceName() }}
+      </h1>
+
+      <div class="place-details__grid">
+        <section class="place-details__section">
+          <h2>Type</h2>
+          <p>{{ getPlaceType() }}</p>
+        </section>
+
+        <section class="place-details__section">
+          <h2>Location</h2>
+
+          @if (placeDetails.properties.lat != null && placeDetails.properties.lon != null) {
+            <p class="place-details__address">
+              {{ placeDetails.properties.formatted || 'Address is not available' }}
+            </p>
+
+            <a class="place-details__link" [href]="getMapUrl()" target="_blank" rel="noreferrer">
+              Open in Google Maps
+            </a>
+          } @else {
+            <p>Coordinates are not available.</p>
+          }
+        </section>
+
+        <section class="place-details__section">
+          <h2>Categories</h2>
+
+          @if (placeDetails.properties.categories?.length) {
+            <ul class="place-details__tags">
+              @for (category of placeDetails.properties.categories; track category) {
+                <li>{{ category }}</li>
+              }
+            </ul>
+          } @else {
+            <p>Categories are not available.</p>
+          }
+        </section>
+
+        <section class="place-details__section">
+          <h2>Contact</h2>
+
+          @if (placeDetails.properties.website) {
+            <p class="place-details__contact-item">
+              <span class="place-details__contact-label">Website:</span>
+
+              <a
+                class="place-details__link"
+                [href]="placeDetails.properties.website"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {{ placeDetails.properties.website }}
+              </a>
+            </p>
+          } @else {
+            <p>Website is not available.</p>
+          }
+
+          @if (placeDetails.properties.contact?.phone) {
+            <p class="place-details__contact-item">
+              <span class="place-details__contact-label">Phone:</span>
+              <span>{{ placeDetails.properties.contact?.phone }}</span>
+            </p>
+          }
+        </section>
+
+        <section class="place-details__section">
+          <h2>Opening hours</h2>
+          <p>{{ placeDetails.properties.opening_hours || 'Opening hours are not available.' }}</p>
+        </section>
+      </div>
+
+      @if (staticMapUrl()) {
+        <section class="place-details__map-section">
+          <div class="place-details__map">
+            @if (isMapLoading()) {
+              <div class="place-details__map-loader" aria-label="Loading map">
+                <span class="place-details__spinner"></span>
+              </div>
+            }
+
+            @if (mapErrorMessage()) {
+              <p class="place-details__map-error">{{ mapErrorMessage() }}</p>
+            }
+
+            <img
+              [class.place-details__map-image--hidden]="isMapLoading()"
+              [src]="staticMapUrl()"
+              [alt]="'Map location for ' + getPlaceName()"
+              (load)="onMapLoad()"
+              (error)="onMapError()"
+            />
+          </div>
+        </section>
+      }
+    </article>
+  }
+</main>

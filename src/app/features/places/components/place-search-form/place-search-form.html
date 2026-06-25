@@ -1,0 +1,37 @@
+<form class="place-search-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="place-search-form__field">
+    <label class="place-search-form__label" for="keyword">What are you looking for?</label>
+
+    <input
+      id="keyword"
+      class="place-search-form__input"
+      type="text"
+      formControlName="keyword"
+      placeholder="Museum, park, coffee..."
+    />
+
+    @if (form.controls.keyword.touched && form.controls.keyword.hasError('required')) {
+      <p class="place-search-form__error">Keyword is required.</p>
+    }
+  </div>
+
+  <div class="place-search-form__field">
+    <label class="place-search-form__label" for="location">Where?</label>
+
+    <input
+      id="location"
+      class="place-search-form__input"
+      type="text"
+      formControlName="location"
+      placeholder="Wroclaw, Warsaw, Paris..."
+    />
+
+    @if (form.controls.location.touched && form.controls.location.hasError('required')) {
+      <p class="place-search-form__error">Location is required.</p>
+    }
+  </div>
+
+  <div class="place-search-form__actions">
+    <button class="place-search-form__button" type="submit">Search places</button>
+  </div>
+</form>

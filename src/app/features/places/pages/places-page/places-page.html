@@ -1,0 +1,69 @@
+<main class="places-page">
+  <section class="places-page__hero">
+    <p class="places-page__eyebrow">Travel Places Tracker</p>
+
+    <h1 class="places-page__title">Find places for your next trip</h1>
+
+    <p class="places-page__description">
+      Search for interesting places, view details, and save your favorite destinations to a
+      wishlist.
+    </p>
+  </section>
+
+  <app-place-search-form (search)="onSearch($event)" />
+  @if (wishlistPlaces().length > 0) {
+    <section class="places-page__wishlist">
+      <div class="places-page__results-header">
+        <h2 class="places-page__results-title">Wishlist</h2>
+
+        <p class="places-page__results-count">{{ wishlistPlaces().length }} saved places</p>
+      </div>
+
+      <div class="places-page__grid">
+        @for (place of wishlistPlaces(); track $index) {
+          <app-place-card
+            [place]="place"
+            [isWishlistCard]="true"
+            (removeFromWishlist)="onRemoveFromWishlist($event)"
+          />
+        }
+      </div>
+    </section>
+  }
+
+  <section class="places-page__results">
+    @if (isLoading() && places().length === 0) {
+      <div class="places-page__loader">
+        <app-spinner />
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <p class="places-page__error">{{ errorMessage() }}</p>
+    }
+
+    @if (places().length > 0) {
+      <div class="places-page__results-header">
+        <h2 class="places-page__results-title">Found places</h2>
+
+        <p class="places-page__results-count">
+          {{ places().length }} places found near {{ searchedLocation() }}
+        </p>
+      </div>
+
+      <div class="places-page__grid">
+        @for (place of places(); track $index) {
+          <app-place-card
+            [place]="place"
+            [isSaved]="isPlaceInWishlist(place)"
+            (addToWishlist)="onAddToWishlist($event)"
+          />
+        }
+      </div>
+    }
+
+    @if (!isLoading() && !errorMessage() && searchedLocation() && places().length === 0) {
+      <p class="places-page__status">No places found. Try another keyword or location.</p>
+    }
+  </section>
+</main>
