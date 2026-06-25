@@ -60,26 +60,25 @@ export class PlacesApi {
   private getCategoryByKeyword(keyword: string): string {
     const normalizedKeyword = keyword.trim().toLowerCase();
 
-    if (normalizedKeyword.includes('museum')) {
-      return 'entertainment.museum';
-    }
+    switch (true) {
+      case normalizedKeyword.includes('museum'):
+        return 'entertainment.museum';
 
-    if (normalizedKeyword.includes('park')) {
-      return 'leisure.park';
-    }
+      case normalizedKeyword.includes('park'):
+        return 'leisure.park';
 
-    if (normalizedKeyword.includes('coffee') || normalizedKeyword.includes('cafe')) {
-      return 'catering.cafe';
-    }
+      case normalizedKeyword.includes('coffee'):
+      case normalizedKeyword.includes('cafe'):
+        return 'catering.cafe';
 
-    if (normalizedKeyword.includes('restaurant')) {
-      return 'catering.restaurant';
-    }
+      case normalizedKeyword.includes('restaurant'):
+        return 'catering.restaurant';
 
-    if (normalizedKeyword.includes('castle')) {
-      return 'tourism.sights.castle';
-    }
+      case normalizedKeyword.includes('castle'):
+        return 'tourism.sights.castle';
 
-    return 'tourism';
+      default:
+        return 'tourism';
+    }
   }
 }

@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, type OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { environment } from '../../../../../environments/environment';
@@ -11,9 +12,10 @@ import { PlacesApi } from '../../../../core/services/places/places-api';
   templateUrl: './place-details-page.html',
   styleUrl: './place-details-page.scss',
 })
-export class PlaceDetailsPage {
+export class PlaceDetailsPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly placesApi = inject(PlacesApi);
+  private readonly destroyRef = inject(DestroyRef);
 
   place = signal<GeoapifyPlaceDetailsFeature | null>(null);
   isLoading = signal(false);
@@ -37,34 +39,37 @@ export class PlaceDetailsPage {
     this.isMapLoading.set(false);
     this.mapErrorMessage.set(null);
 
-    this.placesApi.getPlaceDetails(placeId).subscribe({
-      next: (response) => {
-        const firstFeature = response.features[0];
+    this.placesApi
+      .getPlaceDetails(placeId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          const firstFeature = response.features[0];
 
-        if (!firstFeature) {
-          this.errorMessage.set('Place details were not found.');
+          if (!firstFeature) {
+            this.errorMessage.set('Place details were not found.');
+            this.isLoading.set(false);
+            return;
+          }
+
+          this.place.set(firstFeature);
+
+          const mapUrl = this.buildStaticMapUrl();
+
+          if (mapUrl) {
+            this.staticMapUrl.set(mapUrl);
+            this.isMapLoading.set(true);
+          }
+
           this.isLoading.set(false);
-          return;
-        }
+        },
+        error: (error: unknown) => {
+          this.errorMessage.set('Something went wrong while loading place details.');
+          this.isLoading.set(false);
 
-        this.place.set(firstFeature);
-
-        const mapUrl = this.buildStaticMapUrl();
-
-        if (mapUrl) {
-          this.staticMapUrl.set(mapUrl);
-          this.isMapLoading.set(true);
-        }
-
-        this.isLoading.set(false);
-      },
-      error: (error: unknown) => {
-        this.errorMessage.set('Something went wrong while loading place details.');
-        this.isLoading.set(false);
-
-        console.error('Place details error:', error);
-      },
-    });
+          console.error('Place details error:', error);
+        },
+      });
   }
 
   getPlaceName(): string {
@@ -80,7 +85,7 @@ export class PlaceDetailsPage {
   getMapUrl(): string {
     const place = this.place();
 
-    if (!place?.properties.lat || !place.properties.lon) {
+    if (place?.properties.lat == null || place.properties.lon == null) {
       return 'https://www.google.com/maps';
     }
 
@@ -99,7 +104,7 @@ export class PlaceDetailsPage {
   private buildStaticMapUrl(): string | null {
     const place = this.place();
 
-    if (!place?.properties.lat || !place.properties.lon) {
+    if (place?.properties.lat == null || place.properties.lon == null) {
       return null;
     }
 

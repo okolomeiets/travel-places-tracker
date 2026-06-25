@@ -1,12 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap, throwError } from 'rxjs';
 
 import type { GeoapifyPlaceFeature } from '../../../../core/models/geoapify-place.model';
 import { PlacesApi } from '../../../../core/services/places/places-api';
 import { PlacesCache } from '../../../../core/services/places-cache/places-cache';
 import { Wishlist } from '../../../../core/services/wishlist/wishlist';
-import { PlaceCard } from '../../components/place-card/place-card';
 import { AppSpinner } from '../../../../shared/components/app-spinner/app-spinner';
+import { PlaceCard } from '../../components/place-card/place-card';
 import {
   PlaceSearchForm,
   type PlaceSearchFormValue,
@@ -22,6 +23,7 @@ export class PlacesPage {
   private readonly placesApi = inject(PlacesApi);
   private readonly placesCache = inject(PlacesCache);
   private readonly wishlist = inject(Wishlist);
+  private readonly destroyRef = inject(DestroyRef);
 
   places = signal<GeoapifyPlaceFeature[]>([]);
   isLoading = signal(false);
@@ -63,6 +65,7 @@ export class PlacesPage {
 
           return this.placesApi.searchPlacesByBounds(keyword, bbox);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (placesResponse) => {
